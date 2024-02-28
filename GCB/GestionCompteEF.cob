@@ -20,13 +20,19 @@ FILE SECTION.
 FD historique.
 01 HistoriqueRecord.
    05 HistoriqueDescrp PIC X(1).
+   05 MYFILLER_H1  PIC X(21).
    05 HistoriqueValA PIC 9(10)V99.
+   05 MYFILLER_H2  PIC X(32).
    05 HistoriqueValB PIC 9(10)V99.
 
 FD solde.
 01 SoldeRecord.
+   05 MYFILLER_S1  PIC X(10).
    05 SoldeValA PIC 9(10)V99.
+   05 MYFILLER_S2  PIC X(2).
+   05 MYFILLER_S3  PIC X(10).
    05 SoldeValB PIC 9(10)V99.
+   05 MYFILLER_S4  PIC X(2).
 
 WORKING-STORAGE SECTION.
 01 SoldeCompteA PIC 9(6)V99 VALUE 1521.20.
@@ -123,20 +129,49 @@ AFFICHER-SOLDE.
   PERFORM ENREGISTRER-HISTORIQUE.
 
 ENREGISTRER-HISTORIQUE.
-  IF WS-HIST-STATUS = "00" OR WS-HIST-STATUS = "97"
+  IF WS-HIST-STATUS = "00" OR WS-HIST-STATUS = "97" THEN
       OPEN EXTEND historique
   ELSE
       OPEN OUTPUT historique
   END-IF
+
   MOVE Choix TO HistoriqueDescrp
-  MOVE Depot TO HistoriqueValA
-  MOVE Retrait TO HistoriqueValB
+
+  EVALUATE HistoriqueDescrp
+    WHEN 'D'
+      MOVE ": Valeur operation ->" TO MYFILLER_H1
+      MOVE Depot TO HistoriqueValA
+      MOVE ", Nouvelle valeur solde cible ->" TO MYFILLER_H2
+      MOVE SoldeCompteA TO HistoriqueValB
+    WHEN 'R'
+      MOVE ": Valeur operation ->" TO MYFILLER_H1
+      MOVE Retrait TO HistoriqueValA
+      MOVE ", Nouvelle valeur solde cible ->" TO MYFILLER_H2
+      MOVE SoldeCompteA TO HistoriqueValB
+    WHEN 'V'
+      MOVE ": Valeur operation ->" TO MYFILLER_H1
+      MOVE Virement TO HistoriqueValA
+      MOVE ", Nouvelle valeur solde cible ->" TO MYFILLER_H2
+      MOVE SoldeCompteA TO HistoriqueValB
+    WHEN 'S'
+      MOVE ": Valeur solde A --->" TO MYFILLER_H1
+      MOVE SoldeCompteA TO HistoriqueValA
+      MOVE ", Valeur solde B -------------->" TO MYFILLER_H2
+      MOVE SoldeCompteB TO HistoriqueValB
+    WHEN OTHER
+      DISPLAY "Choix invalide."
+  END-EVALUATE.
+
   WRITE HistoriqueRecord
   CLOSE historique.
 
 ENREGISTRER-SOLDE.
   OPEN OUTPUT solde
+  MOVE "Solde A : " TO MYFILLER_S1
   MOVE SoldeCompteA TO SoldeValA
+  MOVE ". " TO MYFILLER_S2
+  MOVE "Solde B : " TO MYFILLER_S3
   MOVE SoldeCompteB TO SoldeValB
+  MOVE ". " TO MYFILLER_S4
   WRITE SoldeRecord
   CLOSE solde.
