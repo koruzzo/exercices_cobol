@@ -8,14 +8,14 @@ FILE-CONTROL.
 DATA DIVISION.
 
 WORKING-STORAGE SECTION.
-01 DisplayAffichage PIC X(100) VALUE "---------------------------------------------------".
+77 DisplayAffichage PIC X(51) VALUE "---------------------------------------------------".
 
-01 SoldeCompteA PIC 9(6)V99 VALUE 1521.20.
-01 SoldeCompteB PIC 9(6)V99 VALUE 1705.45.
-01 Depot PIC 9(6)V99.
-01 Retrait PIC 9(6)V99.
-01 Virement PIC 9(6)V99.
-01 Choix PIC X(1).
+77 SoldeCompteA PIC 9(6)V99 VALUE 1521.20.
+77 SoldeCompteB PIC 9(6)V99 VALUE 1705.45.
+77 Depot PIC 9(6)V99.
+77 Retrait PIC 9(6)V99.
+77 Virement PIC 9(6)V99.
+77 Choix PIC X(1).
 
 PROCEDURE DIVISION.
   DISPLAY "Début du programme de gestion de compte bancaire."
