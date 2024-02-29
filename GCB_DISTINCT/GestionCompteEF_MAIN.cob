@@ -40,59 +40,15 @@ NOUVELLE-OPERATION.
 
   EVALUATE Choix
     WHEN 'D'
-      PERFORM O-DEPOT
+      CALL 'Depot' USING SoldeCompteA SoldeCompteB Depot Retrait Virement Choix
     WHEN 'R'
-      PERFORM O-RETRAIT
+      CALL 'Retrait' USING SoldeCompteA SoldeCompteB Depot Retrait Virement Choix
     WHEN 'V'
-      PERFORM O-VIREMENT
+      CALL 'Virement' USING SoldeCompteA SoldeCompteB Depot Retrait Virement Choix
     WHEN 'S'
-      PERFORM AFFICHER-SOLDE
+      CALL 'AfficherSolde' USING SoldeCompteA SoldeCompteB Depot Retrait Virement Choix
     WHEN 'E'
       CONTINUE
     WHEN OTHER
       DISPLAY "Choix invalide ou mal écrit. Veuillez entrer un choix valide."
   END-EVALUATE.
-
-O-DEPOT.
-  DISPLAY "Entrez le montant à déposer : "
-  ACCEPT Depot
-  COMPUTE SoldeCompteA = SoldeCompteA + Depot
-  DISPLAY "Dépôt effectué avec succès."
-  DISPLAY "Nouveau solde : " SoldeCompteA "€."
-  CALL 'EnregistrerHistorique' USING SoldeCompteA SoldeCompteB Depot Retrait Virement Choix
-  CALL 'EnregistrerSolde' USING SoldeCompteA SoldeCompteB.
-
-O-RETRAIT.
-  DISPLAY "Entrez le montant à retirer : "
-  ACCEPT Retrait
-  IF Retrait > SoldeCompteA THEN
-    DISPLAY "Solde insuffisant."
-    DISPLAY "Votre solde actuelle: " SoldeCompteA "€."
-  ELSE
-    COMPUTE SoldeCompteA = SoldeCompteA - Retrait
-    DISPLAY "Retrait effectué avec succès."
-    DISPLAY "Nouveau solde : " SoldeCompteA "€."
-    CALL 'EnregistrerHistorique' USING SoldeCompteA SoldeCompteB Depot Retrait Virement Choix
-    CALL 'EnregistrerSolde' USING SoldeCompteA SoldeCompteB
-  END-IF.
-
-O-VIREMENT.
-  DISPLAY "Entrez le montant à transférer : "
-  ACCEPT Virement
-  IF Virement > SoldeCompteA THEN
-    DISPLAY "Solde insuffisant."
-    DISPLAY "Votre solde actuelle: " SoldeCompteA "€."
-  ELSE
-    COMPUTE SoldeCompteA = SoldeCompteA - Virement
-    COMPUTE SoldeCompteB = SoldeCompteB + Virement
-    DISPLAY "Virement effectué avec succès."
-    DISPLAY "Nouveau solde : " SoldeCompteA "€."
-    DISPLAY "Solde compte B: " SoldeCompteB "€."
-    CALL 'EnregistrerHistorique' USING SoldeCompteA SoldeCompteB Depot Retrait Virement Choix
-    CALL 'EnregistrerSolde' USING SoldeCompteA SoldeCompteB
-  END-IF.
-
-AFFICHER-SOLDE.
-  DISPLAY "Vous avez : " SoldeCompteA "€ sur votre compte."
-  DISPLAY "Solde compte B: " SoldeCompteB "€."
-  CALL 'EnregistrerHistorique' USING SoldeCompteA SoldeCompteB Depot Retrait Virement Choix.
