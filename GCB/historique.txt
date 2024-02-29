@@ -1,2 +1,0 @@
-D: Valeur operation ->000000035500, Nouvelle valeur solde cible ->000000187620
-S: Valeur solde A --->000000187620, Valeur solde B -------------->000000170545
